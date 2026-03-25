@@ -2,7 +2,6 @@ package com.ar.objectrecognition.manager
 
 import android.content.Context
 import android.net.Uri
-import android.os.Environment
 import com.google.mlkit.vision.objects.ObjectDetection
 import com.google.mlkit.vision.objects.custom.CustomObjectDetectorOptions
 import com.google.mlkit.vision.objects.custom.LocalModel
@@ -77,11 +76,23 @@ class ModelManager(private val context: Context) {
     fun saveModel(uri: Uri): Boolean {
         try {
             val inputStream = context.contentResolver.openInputStream(uri)
-            val outputStream = getModelFile().outputStream()
+            val tempFile = File(modelDir, "temp_model.tflite")
+            val outputStream = tempFile.outputStream()
             inputStream?.copyTo(outputStream)
             inputStream?.close()
             outputStream.close()
-            return true
+            
+            if (validateModel(tempFile)) {
+                val modelFile = getModelFile()
+                if (modelFile.exists()) {
+                    modelFile.delete()
+                }
+                tempFile.renameTo(modelFile)
+                return true
+            } else {
+                tempFile.delete()
+                return false
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             return false
@@ -91,14 +102,59 @@ class ModelManager(private val context: Context) {
     fun saveConfig(uri: Uri): Boolean {
         try {
             val inputStream = context.contentResolver.openInputStream(uri)
-            val outputStream = getConfigFile().outputStream()
+            val tempFile = File(configDir, "temp_config.json")
+            val outputStream = tempFile.outputStream()
             inputStream?.copyTo(outputStream)
             inputStream?.close()
             outputStream.close()
-            return true
+            
+            val configManager = ConfigManager(context)
+            val jsonString = tempFile.readText()
+            if (configManager.validateConfig(jsonString)) {
+                val configFile = getConfigFile()
+                if (configFile.exists()) {
+                    configFile.delete()
+                }
+                tempFile.renameTo(configFile)
+                return true
+            } else {
+                tempFile.delete()
+                return false
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             return false
+        }
+    }
+    
+    fun validateModel(file: File): Boolean {
+        if (!file.exists()) {
+            return false
+        }
+        
+        val fileSize = file.length()
+        if (fileSize < 1024) {
+            return false
+        }
+        
+        if (fileSize > 50 * 1024 * 1024) {
+            return false
+        }
+        
+        return try {
+            val localModel = LocalModel.Builder()
+                .setAbsoluteFilePath(file.absolutePath)
+                .build()
+            
+            val options = CustomObjectDetectorOptions.Builder(localModel)
+                .setDetectorMode(CustomObjectDetectorOptions.SINGLE_IMAGE_MODE)
+                .build()
+            
+            ObjectDetection.getClient(options).close()
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
         }
     }
 

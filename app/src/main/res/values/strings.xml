@@ -7,4 +7,18 @@
     <string name="scanning">扫描中...</string>
     <string name="object_detected">检测到: %s (置信度: %s)</string>
     <string name="unknown_object">未知物体</string>
+    <string name="sync_model">同步模型</string>
+    <string name="sync_success">同步成功！</string>
+    <string name="sync_failed">同步失败: %s</string>
+    <string name="please_enter_server_url">请输入服务器地址</string>
+    <string name="syncing">同步中... %d%%</string>
+    <string name="model_validation_failed">模型验证失败</string>
+    <string name="config_validation_failed">配置文件验证失败</string>
+    <string name="using_default_config">使用默认配置</string>
+    <string name="select_model_file">选择模型文件</string>
+    <string name="select_config_file">选择配置文件</string>
+    <string name="back">返回</string>
+    <string name="sync_from_server">从服务器同步</string>
+    <string name="sync_from_local">从本地文件同步</string>
+    <string name="server_url_hint">服务器地址 (例如: http://192.168.1.100:8080/models)</string>
 </resources>

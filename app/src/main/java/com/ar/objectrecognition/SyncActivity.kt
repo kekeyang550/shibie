@@ -4,9 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.ar.objectrecognition.databinding.ActivitySyncBinding
 import com.ar.objectrecognition.manager.SyncManager
@@ -15,10 +14,25 @@ class SyncActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySyncBinding
     private lateinit var syncManager: SyncManager
+    private var pendingModelUri: Uri? = null
 
-    companion object {
-        private const val REQUEST_MODEL_FILE = 1
-        private const val REQUEST_CONFIG_FILE = 2
+    private val selectModelFileLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            pendingModelUri = it
+            selectConfigFile()
+        }
+    }
+
+    private val selectConfigFileLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { configUri ->
+            pendingModelUri?.let { modelUri ->
+                syncFromLocal(modelUri, configUri)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +62,7 @@ class SyncActivity : AppCompatActivity() {
     private fun syncFromServer() {
         val serverUrl = binding.etServerUrl.text.toString().trim()
         if (serverUrl.isEmpty()) {
-            Toast.makeText(this, "请输入服务器地址", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.please_enter_server_url, Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -57,57 +71,31 @@ class SyncActivity : AppCompatActivity() {
         syncManager.syncFromServer(serverUrl, object : SyncManager.SyncCallback {
             override fun onSuccess() {
                 showProgress(false)
-                Toast.makeText(this@SyncActivity, "同步成功！", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SyncActivity, R.string.sync_success, Toast.LENGTH_SHORT).show()
                 setResult(RESULT_OK)
                 finish()
             }
 
             override fun onFailure(error: String) {
                 showProgress(false)
-                Toast.makeText(this@SyncActivity, error, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SyncActivity, String.format(getString(R.string.sync_failed), error), Toast.LENGTH_SHORT).show()
             }
 
             override fun onProgress(progress: Int) {
                 runOnUiThread {
                     binding.progressBar.progress = progress
-                    binding.tvProgress.text = "同步中... $progress%"
+                    binding.tvProgress.text = String.format(getString(R.string.syncing), progress)
                 }
             }
         })
     }
 
     private fun selectModelFile() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "*/*"
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/octet-stream", "model/tflite"))
-        startActivityForResult(intent, REQUEST_MODEL_FILE)
+        selectModelFileLauncher.launch("*/*")
     }
 
-    private fun selectConfigFile(modelUri: Uri) {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "application/json"
-        startActivityForResult(Intent.createChooser(intent, "选择配置文件"), REQUEST_CONFIG_FILE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && data != null) {
-            when (requestCode) {
-                REQUEST_MODEL_FILE -> {
-                    val modelUri = data.data
-                    modelUri?.let {
-                        selectConfigFile(it)
-                    }
-                }
-                REQUEST_CONFIG_FILE -> {
-                    val configUri = data.data
-                    val modelUri = intent.getParcelableExtra<Uri>("modelUri")
-                    if (modelUri != null && configUri != null) {
-                        syncFromLocal(modelUri, configUri)
-                    }
-                }
-            }
-        }
+    private fun selectConfigFile() {
+        selectConfigFileLauncher.launch("application/json")
     }
 
     private fun syncFromLocal(modelUri: Uri, configUri: Uri) {
@@ -116,20 +104,20 @@ class SyncActivity : AppCompatActivity() {
         syncManager.syncFromLocal(modelUri, configUri, object : SyncManager.SyncCallback {
             override fun onSuccess() {
                 showProgress(false)
-                Toast.makeText(this@SyncActivity, "同步成功！", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SyncActivity, R.string.sync_success, Toast.LENGTH_SHORT).show()
                 setResult(RESULT_OK)
                 finish()
             }
 
             override fun onFailure(error: String) {
                 showProgress(false)
-                Toast.makeText(this@SyncActivity, error, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SyncActivity, String.format(getString(R.string.sync_failed), error), Toast.LENGTH_SHORT).show()
             }
 
             override fun onProgress(progress: Int) {
                 runOnUiThread {
                     binding.progressBar.progress = progress
-                    binding.tvProgress.text = "同步中... $progress%"
+                    binding.tvProgress.text = String.format(getString(R.string.syncing), progress)
                 }
             }
         })

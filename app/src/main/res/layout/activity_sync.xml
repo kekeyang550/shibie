@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="模型同步"
+            android:text="@string/sync_model"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -31,7 +31,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="从服务器同步"
+                android:text="@string/sync_from_server"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
@@ -40,7 +40,7 @@
                 android:id="@+id/etServerUrl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="服务器地址 (例如: http://192.168.1.100:8080/models)"
+                android:hint="@string/server_url_hint"
                 android:inputType="textUri"
                 android:padding="12dp"
                 android:background="@android:drawable/editbox_background"
@@ -50,7 +50,7 @@
                 android:id="@+id/btnSyncFromServer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="从服务器同步"
+                android:text="@string/sync_from_server"
                 android:backgroundTint="@color/purple_500"
                 android:textColor="@android:color/white"
                 android:padding="12dp" />
@@ -64,7 +64,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="从本地同步"
+                android:text="@string/sync_from_local"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
@@ -73,7 +73,7 @@
                 android:id="@+id/btnSyncFromLocal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="从本地文件同步"
+                android:text="@string/sync_from_local"
                 android:backgroundTint="@color/teal_700"
                 android:textColor="@android:color/white"
                 android:padding="12dp" />
@@ -83,7 +83,7 @@
             android:id="@+id/btnBack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="返回"
+            android:text="@string/back"
             android:backgroundTint="@android:color/darker_gray"
             android:textColor="@android:color/white"
             android:padding="12dp"
@@ -112,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="同步中... 0%"
+            android:text="@string/scanning"
             android:textSize="16sp" />
     </LinearLayout>
 
