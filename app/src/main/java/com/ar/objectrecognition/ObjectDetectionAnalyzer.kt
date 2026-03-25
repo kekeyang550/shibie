@@ -1,23 +1,36 @@
 package com.ar.objectrecognition
 
+import android.content.Context
 import android.graphics.Rect
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import com.ar.objectrecognition.manager.ModelManager
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.objects.DetectedObject
 import com.google.mlkit.vision.objects.ObjectDetection
 import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
 
 class ObjectDetectionAnalyzer(
+    private val context: Context,
     private val viewModel: MainViewModel
 ) : ImageAnalysis.Analyzer {
 
-    private val options = ObjectDetectorOptions.Builder()
-        .setDetectorMode(ObjectDetectorOptions.STREAM_MODE)
-        .enableClassification()
-        .build()
+    private val modelManager = ModelManager(context)
+    private var objectDetector = createDefaultDetector()
 
-    private val objectDetector = ObjectDetection.getClient(options)
+    private fun createDefaultDetector() = ObjectDetection.getClient(
+        ObjectDetectorOptions.Builder()
+            .setDetectorMode(ObjectDetectorOptions.STREAM_MODE)
+            .enableClassification()
+            .build()
+    )
+
+    fun updateDetector() {
+        val customDetector = modelManager.loadModel()
+        if (customDetector != null) {
+            objectDetector = customDetector
+        }
+    }
 
     @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {

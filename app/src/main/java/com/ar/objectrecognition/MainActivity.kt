@@ -1,6 +1,7 @@
 package com.ar.objectrecognition
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
@@ -11,8 +12,8 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.ar.objectrecognition.databinding.ActivityMainBinding
-import com.google.mlkit.vision.objects.ObjectDetection
-import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
+import com.ar.objectrecognition.manager.ConfigManager
+import com.ar.objectrecognition.manager.ModelManager
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private lateinit var cameraExecutor: ExecutorService
     private var imageAnalyzer: ImageAnalysis? = null
+    private lateinit var configManager: ConfigManager
+    private lateinit var modelManager: ModelManager
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -33,15 +36,36 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val syncActivityLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            // 同步成功，更新检测器
+            val analyzer = imageAnalyzer?.analyzer as? ObjectDetectionAnalyzer
+            analyzer?.updateDetector()
+            Toast.makeText(this, "模型同步成功！", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         cameraExecutor = Executors.newSingleThreadExecutor()
+        configManager = ConfigManager(this)
+        modelManager = ModelManager(this)
         
         checkCameraPermission()
         setupObservers()
+        setupListeners()
+    }
+
+    private fun setupListeners() {
+        binding.btnSync.setOnClickListener {
+            val intent = Intent(this, SyncActivity::class.java)
+            syncActivityLauncher.launch(intent)
+        }
     }
 
     private fun checkCameraPermission() {
@@ -61,7 +85,7 @@ class MainActivity : AppCompatActivity() {
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         
-        cameraProviderFuture.addListener({
+        cameraProviderFuture.addListener({ 
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
             bindCameraUseCases(cameraProvider)
         }, ContextCompat.getMainExecutor(this))
@@ -74,11 +98,12 @@ class MainActivity : AppCompatActivity() {
                 it.setSurfaceProvider(binding.previewView.surfaceProvider)
             }
 
+        val analyzer = ObjectDetectionAnalyzer(this, viewModel)
         imageAnalyzer = ImageAnalysis.Builder()
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .build()
             .also {
-                it.setAnalyzer(cameraExecutor, ObjectDetectionAnalyzer(viewModel))
+                it.setAnalyzer(cameraExecutor, analyzer)
             }
 
         val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -100,7 +125,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.detectionResults.observe(this) { results ->
             if (results.isNotEmpty()) {
                 val result = results.first()
-                val objectInfo = ObjectLibrary.findObjectByLabel(result.label)
+                val objectInfo = configManager.findObjectByLabel(result.label)
                 
                 val displayText = if (objectInfo != null) {
                     buildString {
