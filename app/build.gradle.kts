@@ -50,16 +50,30 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    
+    // ML Kit
     implementation("com.google.mlkit:object-detection:17.0.1")
     implementation("com.google.mlkit:object-detection-custom:17.0.1")
     
+    // ARCore
     implementation("com.google.ar:core:1.40.0")
     implementation("de.javagl:obj:0.3.0")
     
+    // CameraX
     implementation("androidx.camera:camera-core:1.3.4")
     implementation("androidx.camera:camera-camera2:1.3.4")
     implementation("androidx.camera:camera-lifecycle:1.3.4")
     implementation("androidx.camera:camera-view:1.3.4")
+    
+    // RecyclerView and SwipeRefresh
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    
+    // CoordinatorLayout
+    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
     
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
