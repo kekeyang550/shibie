@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AR物体识别</string>
+    <string name="camera_permission_required">需要相机权限</string>
+    <string name="permission_denied">权限被拒绝</string>
+    <string name="ar_not_supported">设备不支持ARCore</string>
+    <string name="install_arcore">请安装ARCore</string>
+    <string name="scanning">扫描中...</string>
+    <string name="object_detected">检测到: %s (置信度: %s)</string>
+    <string name="unknown_object">未知物体</string>
+</resources>
