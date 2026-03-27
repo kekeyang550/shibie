@@ -7,9 +7,9 @@ AR物体识别训练工具 - 主入口
 
 import sys
 import os
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
-    QPushButton, QLabel, QLineEdit, QTextEdit, QTabWidget, QFileDialog, QMessageBox, 
-    QProgressBar, QComboBox, QSpinBox, QDoubleSpinBox, QListWidget, QGroupBox, QSplitter
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+                             QPushButton, QLabel, QLineEdit, QTextEdit, QTabWidget, QFileDialog, QMessageBox,
+                             QProgressBar, QComboBox, QSpinBox, QDoubleSpinBox, QListWidget, QGroupBox, QSplitter)
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtGui import QPixmap, QImage
 import cv2
@@ -169,7 +169,7 @@ class DataAnnotationTab(QWidget):
             return
             
         save_path, _ = QFileDialog.getSaveFileName(
-            self, "保存标注文件", "", "JSON Files (*.json)"")
+            self, "保存标注文件", "", "JSON Files (*.json)")
         if save_path:
             with open(save_path, 'w', encoding='utf-8') as f:
                 json.dump(self.annotations, f, ensure_ascii=False, indent=2)
