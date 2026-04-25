@@ -134,7 +134,7 @@ class DataAnnotationTab(QWidget):
         self.current_image = None
         self.current_annotations = []
         self.image_files = []
-        self.all_annotations = {}  # 存储所有图片的标注 {图片路径: [标注列表]}
+        self.all_annotations = {}
 
     def init_ui(self):
         layout = QHBoxLayout()
@@ -219,7 +219,6 @@ class DataAnnotationTab(QWidget):
                     self.image_files.append(full_path)
 
     def load_image(self, item):
-        # 保存当前图片的标注
         if self.current_image and self.current_image in self.image_label.annotations:
             self.all_annotations[self.current_image] = self.image_label.annotations.copy()
 
@@ -234,7 +233,6 @@ class DataAnnotationTab(QWidget):
             self.image_label.setPixmap(scaled_pixmap)
             self.current_image = image_path
 
-            # 恢复之前保存的标注（如果有）
             if image_path in self.all_annotations:
                 self.image_label.setAnnotations(self.all_annotations[image_path].copy())
             else:
@@ -270,7 +268,6 @@ class DataAnnotationTab(QWidget):
         total += 1 if (self.current_image and self.current_image in self.image_label.annotations) else 0
 
     def save_annotations(self):
-        # 先保存当前图片的标注
         if self.current_image:
             if self.image_label.annotations:
                 self.all_annotations[self.current_image] = self.image_label.annotations.copy()
