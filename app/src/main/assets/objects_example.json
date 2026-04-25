@@ -1,53 +1,51 @@
 [
     {
-        "id": "screwdriver",
-        "name": "螺丝刀",
-        "labels": ["螺丝刀", "screwdriver", "工具"],
-        "hintText": "这是一把螺丝刀，用于拧紧或松开螺丝",
-        "steps": [
-            "选择合适的刀头",
-            "将刀头对准螺丝",
-            "顺时针拧紧，逆时针松开"
-        ]
+        "id": "scissors",
+        "name": "钳子/剪刀",
+        "labels": ["scissors", "pliers", "tool", "hand tool"],
+        "hintText": "这是一把钳子/剪刀工具，用于夹持、剪切等工作",
+        "steps": ["1. 握住钳子手柄", "2. 将钳口对准目标物体", "3. 挤压手柄进行夹持或剪切"]
     },
     {
-        "id": "wrench",
-        "name": "扳手",
-        "labels": ["扳手", "wrench", "工具"],
-        "hintText": "这是一把扳手，用于拧紧或松开螺母",
-        "steps": [
-            "选择合适尺寸的扳手",
-            "将扳手套在螺母上",
-            "顺时针拧紧，逆时针松开"
-        ]
+        "id": "knife",
+        "name": "刀",
+        "labels": ["knife", "blade"],
+        "hintText": "这是一把刀，用于切割",
+        "steps": ["1. 握住刀柄", "2. 沿着切割线施力"]
     },
     {
         "id": "cup",
         "name": "杯子",
-        "labels": ["杯子", "cup", "容器"],
+        "labels": ["cup", "mug", "coffee cup", "bottle"],
         "hintText": "这是一个杯子，可以用来喝水",
         "steps": []
     },
     {
-        "id": "hammer",
-        "name": "锤子",
-        "labels": ["锤子", "hammer", "工具"],
-        "hintText": "这是一把锤子，用于敲击或钉钉子",
-        "steps": [
-            "握住锤柄",
-            "对准目标",
-            "挥锤敲击"
-        ]
+        "id": "bottle",
+        "name": "水瓶",
+        "labels": ["bottle", "water bottle"],
+        "hintText": "这是一个水瓶",
+        "steps": []
     },
     {
-        "id": "scissors",
-        "name": "剪刀",
-        "labels": ["剪刀", "scissors", "工具"],
-        "hintText": "这是一把剪刀，用于剪切纸张、布料等",
-        "steps": [
-            "张开剪刀",
-            "放入要剪切的物品",
-            "合拢剪切"
-        ]
+        "id": "phone",
+        "name": "手机",
+        "labels": ["phone", "cell phone", "smartphone"],
+        "hintText": "这是一部手机",
+        "steps": []
+    },
+    {
+        "id": "keyboard",
+        "name": "键盘",
+        "labels": ["keyboard"],
+        "hintText": "这是一个键盘",
+        "steps": []
+    },
+    {
+        "id": "mouse",
+        "name": "鼠标",
+        "labels": ["mouse", "computer mouse"],
+        "hintText": "这是一个电脑鼠标",
+        "steps": []
     }
 ]

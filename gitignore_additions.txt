@@ -1,0 +1,34 @@
+# Build outputs
+app/build/
+build/
+*.apk
+*.aab
+
+# Gradle
+.gradle/
+gradle/wrapper/gradle-wrapper.jar
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+env/
+*.egg-info/
+
+# Model outputs
+train_output/
+dataset/
+exported_model/
+
+# Temporary files
+*.png
+*.jpg
+*.tflite
+*.onnx
+*.pt
+
+# IDE
+.idea/
+*.iml
+local.properties

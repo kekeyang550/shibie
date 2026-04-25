@@ -96,11 +96,12 @@ class VersionInfoActivity : AppCompatActivity() {
 }
 
 // 版本历史适配器
-class VersionHistoryAdapter(private val versions: List<com.ar.objectrecognition.manager.ModelVersion>) : 
+class VersionHistoryAdapter(private val versions: List<com.ar.objectrecognition.manager.ModelVersion>) :
     RecyclerView.Adapter<VersionHistoryAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // 这里可以添加视图绑定
+        val tvTitle: android.widget.TextView = itemView.findViewById(android.R.id.text1)
+        val tvSummary: android.widget.TextView = itemView.findViewById(android.R.id.text2)
     }
 
     override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): ViewHolder {
@@ -111,7 +112,8 @@ class VersionHistoryAdapter(private val versions: List<com.ar.objectrecognition.
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val version = versions[position]
-        // 绑定数据到视图
+        holder.tvTitle.text = "${version.versionName} (${version.releaseDate})"
+        holder.tvSummary.text = version.description
     }
 
     override fun getItemCount(): Int = versions.size

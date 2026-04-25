@@ -291,7 +291,7 @@ class ModelDownloadService : Service() {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("AR物体识别")
             .setContentText(content)
-            .setSmallIcon(android.R.drawable.ic_download)
+            .setSmallIcon(android.R.drawable.stat_notify_sync)
             .setProgress(100, progress, false)
             .setContentIntent(pendingIntent)
             .setOngoing(true)

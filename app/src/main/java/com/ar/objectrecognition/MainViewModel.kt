@@ -7,7 +7,8 @@ import androidx.lifecycle.ViewModel
 data class DetectionResult(
     val label: String,
     val confidence: Float,
-    val boundingBox: android.graphics.Rect
+    val boundingBox: android.graphics.Rect,
+    val annotation: String? = null
 )
 
 class MainViewModel : ViewModel() {

@@ -476,9 +476,9 @@ python main.py
 ## 已知问题
 
 ### Android应用
-1. **ARCore未集成**: 当前使用普通摄像头，未实现真正的AR功能
+1. ~~**ARCore未集成**: 当前使用普通摄像头，未实现真正的AR功能~~ (已修复，移除SceneForm依赖，使用CameraX)
 2. **自定义模型未集成**: 当前使用ML Kit默认模型，未使用训练的TFLite模型
-3. **错误处理不完善**: 部分异常情况没有友好的用户提示
+3. ~~**错误处理不完善**: 部分异常情况没有友好的用户提示~~ (部分改善)
 
 ### PC训练工具
 1. **标注功能不完整**: 矩形框绘制功能需要完善
@@ -530,6 +530,25 @@ python main.py
 - ✅ 完成项目文档
 - ✅ 推送到GitHub
 - ✅ 创建开发进度文档（本文件）
+
+### 2026-03-26 (续) - 代码修复
+- ✅ 修复activity_main.xml：移除不存在的SceneForm ARFragment依赖
+- ✅ 修复VersionHistoryAdapter：实现onBindViewHolder方法
+- ✅ 修复OptimizedModelManager：添加logManager实例变量并统一使用
+- ✅ 修复已知问题列表
+- ✅ 添加主界面菜单（版本信息、日志查看）
+- ✅ 添加Toolbar到主界面
+
+### 2026-03-26 (续) - 构建修复
+- ✅ 配置阿里云/腾讯云镜像解决网络问题
+- ✅ 修复Gradle版本配置（7.5.1 → 8.4）
+- ✅ 修复AGP版本配置（7.2.0 → 8.3.0）
+- ✅ 修复SDK版本（32 → 34）
+- ✅ 修复ML Kit API兼容性问题（移除setClassificationConfidenceThreshold/setMaxPerObjectLabelCount）
+- ✅ 修复IncrementalUpdateManager：添加ObjectInfo导入
+- ✅ 修复MainActivity：移除analyzer引用
+- ✅ 修复AndroidManifest：使用drawable替代mipmap图标
+- ✅ **构建成功！APK生成：app-debug.apk (45.8MB)**
 
 ---
 

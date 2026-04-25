@@ -1,6 +1,7 @@
 package com.ar.objectrecognition.manager
 
 import android.content.Context
+import com.ar.objectrecognition.ObjectInfo
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File

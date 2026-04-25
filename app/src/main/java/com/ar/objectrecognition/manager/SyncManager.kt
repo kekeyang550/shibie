@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.util.Log
 import java.io.BufferedInputStream
+import java.io.File
 import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
@@ -106,7 +107,7 @@ class SyncManager(private val context: Context) {
                 }
 
                 inputStream = BufferedInputStream(connection.inputStream)
-                outputStream = FileOutputStream(targetFile)
+                outputStream = java.io.FileOutputStream(targetFile)
 
                 val buffer = ByteArray(4096)
                 var bytesRead: Int

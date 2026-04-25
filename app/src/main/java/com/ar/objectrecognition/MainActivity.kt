@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -25,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     private var imageAnalyzer: ImageAnalysis? = null
     private lateinit var configManager: ConfigManager
     private lateinit var modelManager: ModelManager
+    private var imageWidth: Int = 1
+    private var imageHeight: Int = 1
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -40,9 +44,6 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            // 同步成功，更新检测器
-            val analyzer = imageAnalyzer?.analyzer as? ObjectDetectionAnalyzer
-            analyzer?.updateDetector()
             Toast.makeText(this, "模型同步成功！", Toast.LENGTH_SHORT).show()
         }
     }
@@ -52,13 +53,34 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+
         cameraExecutor = Executors.newSingleThreadExecutor()
         configManager = ConfigManager(this)
         modelManager = ModelManager(this)
-        
+
         checkCameraPermission()
         setupObservers()
         setupListeners()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_version -> {
+                startActivity(Intent(this, VersionInfoActivity::class.java))
+                true
+            }
+            R.id.action_logs -> {
+                startActivity(Intent(this, LogViewerActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun setupListeners() {
@@ -98,7 +120,14 @@ class MainActivity : AppCompatActivity() {
                 it.setSurfaceProvider(binding.previewView.surfaceProvider)
             }
 
-        val analyzer = ObjectDetectionAnalyzer(this, viewModel)
+        val analyzer = ObjectDetectionAnalyzer(
+            this,
+            viewModel,
+            configManager
+        ) { width, height ->
+            imageWidth = width
+            imageHeight = height
+        }
         imageAnalyzer = ImageAnalysis.Builder()
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .build()
@@ -123,10 +152,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupObservers() {
         viewModel.detectionResults.observe(this) { results ->
+            binding.detectionOverlay.updateResults(results, imageWidth, imageHeight)
+
             if (results.isNotEmpty()) {
                 val result = results.first()
                 val objectInfo = configManager.findObjectByLabel(result.label)
-                
+
                 val displayText = if (objectInfo != null) {
                     buildString {
                         append("${objectInfo.name}\n")
@@ -146,7 +177,7 @@ class MainActivity : AppCompatActivity() {
                         "${(result.confidence * 100).toInt()}%"
                     )
                 }
-                
+
                 binding.detectionResultTextView.text = displayText
                 binding.detectionResultTextView.visibility = android.view.View.VISIBLE
             } else {

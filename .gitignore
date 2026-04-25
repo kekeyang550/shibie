@@ -13,3 +13,31 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Build outputs
+app/build/
+*.apk
+*.aab
+gradle/wrapper/gradle-wrapper.jar
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+env/
+*.egg-info/
+
+# Model outputs
+train_output/
+dataset/
+exported_model/
+
+# Temporary files
+*.png
+*.tflite
+*.onnx
+*.pt
+
+# Screenshots
+screenshot_*.png
